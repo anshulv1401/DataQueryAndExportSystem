@@ -1,0 +1,137 @@
+﻿########################################################
+#      .gitignore for ASP.NET Core / .NET Web API      #
+########################################################
+
+#-------------------------------------------------------
+# Build results & intermediate files
+#-------------------------------------------------------
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+artifacts/
+publish/
+
+# Visual Studio + Rider cache
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.ncrunch*
+.ReSharper*/
+*.DotSettings.user
+*_Resharper.*  
+
+# Rider generated solution workspace
+.idea/
+
+#-------------------------------------------------------
+# NuGet
+#-------------------------------------------------------
+*.nupkg
+# Packages folder (if using old packages.config)
+packages/
+# Global packages, cache, temp
+~/.nuget/
+.nuget/
+
+#-------------------------------------------------------
+# Logs & diagnostics
+#-------------------------------------------------------
+*.log
+*.vspscc
+*.vssscc
+TestResult*/ 
+TestResults/
+coverage.*
+coverage-results/
+*.coverage
+*.coveragexml
+*.lcov
+
+#-------------------------------------------------------
+# Configuration transforms / secrets
+#-------------------------------------------------------
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+# dotnet user‑secrets (if you’ve initialised them)
+*.db_migrations/
+.env
+.env.*
+
+#-------------------------------------------------------
+# Entity Framework Core Migrations snapshots (if unwanted)
+#-------------------------------------------------------
+Migrations/*Snapshot.cs
+
+#-------------------------------------------------------
+# OS generated files
+#-------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.old
+*.tmp
+
+#-------------------------------------------------------
+# Containers / Docker
+#-------------------------------------------------------
+# Ignore Docker layer caches & build output
+**/.docker/
+docker-compose.override.yml
+
+#-------------------------------------------------------
+# LocalDB, SQLite & other dev‑only data
+#-------------------------------------------------------
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.db-shm
+*.db-wal
+
+#-------------------------------------------------------
+# Rider & VS Code settings (keep only what you need)
+#-------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json      # team‑shared extension recommendations
+!.vscode/launch.json          # debugger profiles you DO want to share
+!.vscode/tasks.json           # common build or test tasks
+
+#-------------------------------------------------------
+# Global JetBrains Rider settings (optional)
+#-------------------------------------------------------
+.idea/
+
+#-------------------------------------------------------
+# NPM / Yarn / PNPM (if you serve a SPA from wwwroot)
+#-------------------------------------------------------
+node_modules/
+# lockfiles are *usually* committed; ignore only if you decide not to
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+#-------------------------------------------------------
+# Static web assets build cache (wwwroot/generated files)
+#-------------------------------------------------------
+wwwroot/dist/
+wwwroot/build/
+wwwroot/node_modules/
+
+#-------------------------------------------------------
+# VS Code history & backup files
+#-------------------------------------------------------
+.history/
+.vscode-test/
+.vscode-ipynb-pyconverter/
+
+########################################################
+#  Add any project‑specific ignores below this line
+########################################################

@@ -1,0 +1,6 @@
+@DataQueryAndExportSystem_HostAddress = http://localhost:5072
+
+GET {{DataQueryAndExportSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
