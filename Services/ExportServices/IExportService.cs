@@ -1,10 +1,10 @@
 ﻿using DataQueryAndExportSystem.Models;
 using static DataQueryAndExportSystem.Enums.DataServiceEnums;
 
-namespace DataQueryAndExportSystem.Services
+namespace DataQueryAndExportSystem.Services.ExportServices
 {
     public interface IExportService
     {
-        Task<List<ExportFileInfo>> Export(string query, int pageNumber);
+        Task<List<ExportFileInfo>> Export(string query);
     }
 }

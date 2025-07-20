@@ -8,18 +8,18 @@ using static DuckDB.NET.Native.NativeMethods;
 
 namespace DataQueryAndExportSystem.Databases;
 
-public class DatabaseService
+public class DatabaseHelper
 {
     public Dictionary<DatabaseType, IDatabaseAdapter> DatabaseAdapters { get; set; } = [];
-    private readonly ILogger<DatabaseService> _logger;
-    public DatabaseService(ILogger<DatabaseService> logger, [FromKeyedServices(DatabaseType.DuckDb)] IDatabaseAdapter database)
+    private readonly ILogger<DatabaseHelper> _logger;
+    public DatabaseHelper(ILogger<DatabaseHelper> logger, [FromKeyedServices(DatabaseType.DuckDb)] IDatabaseAdapter database)
     {
         DatabaseAdapters.Add(DatabaseType.DuckDb, database);
         _logger = logger;
     }
 
 
-    public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(string query, int numberOfPages)
+    public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(string query, int? numberOfPages = null)
     {
         var connectionDetails = new ConnectionDetails
         {

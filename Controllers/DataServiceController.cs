@@ -18,16 +18,16 @@ namespace DataQueryAndExportSystem.Controllers
             _dataService = dataService;
         }
 
-        [HttpGet(template:nameof(Query), Name = "Query")]
+        [HttpGet(template: nameof(Query), Name = "Query")]
         public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> Query([FromQuery] string query, [FromQuery] int pageNumber)
         {
             return await _dataService.FetchData(query, pageNumber);
         }
 
-        [HttpPost(template:nameof(Export), Name= "export")]
-        public async Task<ExportStatus> Export([FromQuery] string query, [FromQuery] ExportFormat exportFormat)
+        [HttpPost(template: nameof(Export), Name = "export")]
+        public async Task<ExportStatus> Export([FromQuery] ExportFormat exportFormat, [FromQuery] string query)
         {
-            return await _dataService.QueueExport(query, exportFormat);
+            return await _dataService.QueueExport(exportFormat, query);
         }
 
         [HttpGet(template: nameof(Export), Name = "export-status")]

@@ -4,10 +4,10 @@
     {
         public enum ExportFormat
         {
-            JSON,
             CSV,
+            XLSX,
             PDF,
-            XLSX
+            JSON
         }
 
         public enum JobStatus
