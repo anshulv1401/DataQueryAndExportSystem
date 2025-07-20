@@ -8,10 +8,13 @@ namespace DataQueryAndExportSystem.Services
     public class DataService : IDataService
     {
         private readonly DatabaseService _databaseService;
-        public DataService(DatabaseService databaseService)
+        private readonly ILogger<DataService> _logger;
+        public DataService(ILogger<DataService> logger, DatabaseService databaseService)
         {
             _databaseService = databaseService;
+            _logger = logger;
         }
+
 
         public async Task<ExportStatus> QueueExport(string query, DataServiceEnums.ExportFormat format)
         {
