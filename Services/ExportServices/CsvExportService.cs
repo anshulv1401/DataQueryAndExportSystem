@@ -33,6 +33,7 @@ namespace DataQueryAndExportSystem.Services.ExportServices
                 PopulateExcelSheetWithData(sheet, data);
 
                 var savedFileName = fileName + ".csv";
+                Directory.CreateDirectory(_applicationConfiguration.ExportFolderPath);
                 var finalPath = Path.Combine(_applicationConfiguration.ExportFolderPath, savedFileName);
 
                 _logger.LogInformation("File generating for CSV");
@@ -67,7 +68,17 @@ namespace DataQueryAndExportSystem.Services.ExportServices
 
                 for (int column = 0; column < data[row].Count; column++)
                 {
-                    sheet.Cells[row + 2, column + 1].Value = data[row][column].Value;
+                    var value = data[row][column].Value;
+
+                    // Convert DateOnly to DateTime (GemBox supports DateTime)
+                    if (value is DateOnly dateOnly)
+                    {
+                        sheet.Cells[row + 2, column + 1].Value = dateOnly.ToDateTime(TimeOnly.MinValue);
+                    }
+                    else
+                    {
+                        sheet.Cells[row + 2, column + 1].Value = value;
+                    }
                 }
             }
         }
@@ -76,45 +87,10 @@ namespace DataQueryAndExportSystem.Services.ExportServices
         {
             var ms = new MemoryStream();
 
-            if (string.Compare(fileType, "CSV-Windows-UTF-8", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Windows with Encoding UTF-8");
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always });
-            }
-            else if (string.Compare(fileType, "CSV-Mac-UTF-8", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Mac with Encoding UTF-8");
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always });
-            }
-            else if (string.Compare(fileType, "CSV-Unix-UTF-8", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Unix with Encoding UTF-8");
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always });
-            }
-            else if (string.Compare(fileType, "CSV-Windows-ANSI", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Windows with Encoding ANSI");
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always, Encoding = Encoding.GetEncoding(1252) });
-            }
-            else if (string.Compare(fileType, "CSV-Mac-ANSI", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Mac with Encoding ANSI");
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always, Encoding = Encoding.GetEncoding(1252) });
-            }
-            else if (string.Compare(fileType, "CSV-Unix-ANSI", true) == 0)
-            {
-                _logger.LogInformation("File Generating for CSV-Unix with Encoding ANSI");
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { Encoding = Encoding.GetEncoding(1252) });
-            }
-
+            workbook.Save(ms, new CsvSaveOptions(CsvType.CommaDelimited) { QuoteMode = CsvQuoteMode.Always });
             ms.Position = 0;
-            var finalContent = new StreamReader(ms).ReadToEnd();
 
-            if (fileType.Contains("Mac", StringComparison.OrdinalIgnoreCase))
-                finalContent = finalContent.Replace("\n", "");
-            else if (fileType.Contains("Unix", StringComparison.OrdinalIgnoreCase))
-                finalContent = finalContent.Replace("\r", "");
+            var finalContent = new StreamReader(ms).ReadToEnd();
 
             return finalContent;
         }

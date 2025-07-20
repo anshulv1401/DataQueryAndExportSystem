@@ -12,10 +12,12 @@ public class DatabaseHelper
 {
     public Dictionary<DatabaseType, IDatabaseAdapter> DatabaseAdapters { get; set; } = [];
     private readonly ILogger<DatabaseHelper> _logger;
-    public DatabaseHelper(ILogger<DatabaseHelper> logger, [FromKeyedServices(DatabaseType.DuckDb)] IDatabaseAdapter database)
+    private readonly ApplicationConfiguration _applicationConfiguration;
+    public DatabaseHelper(ILogger<DatabaseHelper> logger, ApplicationConfiguration applicationConfiguration, [FromKeyedServices(DatabaseType.DuckDb)] IDatabaseAdapter database)
     {
         DatabaseAdapters.Add(DatabaseType.DuckDb, database);
         _logger = logger;
+        _applicationConfiguration = applicationConfiguration;
     }
 
 
@@ -23,8 +25,7 @@ public class DatabaseHelper
     {
         var connectionDetails = new ConnectionDetails
         {
-            Server = "sales.duckdb",
-            Database = ""
+            Server = _applicationConfiguration.DuckDbConnectionString,
         };
 
         return await DatabaseAdapters[DatabaseType.DuckDb].FetchData(connectionDetails, query, numberOfPages * 100);

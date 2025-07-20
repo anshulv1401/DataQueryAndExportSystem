@@ -4,5 +4,6 @@
     {
         public required LoggingConfiguration Logging { get; set; }
         public required string ExportFolderPath { get; set; }
+        public required string DuckDbConnectionString { get; set; }
     }
 }
