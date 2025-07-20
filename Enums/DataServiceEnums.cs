@@ -18,5 +18,10 @@
             Failed,
             Canceled
         }
+
+        public enum DatabaseType
+        {
+            DuckDb
+        }
     }
 }

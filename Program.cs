@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace DataQueryAndExportSystem
 {
@@ -16,6 +17,8 @@ namespace DataQueryAndExportSystem
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
+            // TODO logging configuration
+            builder.Services.AddSingleton(Log.Logger);
             var app = builder.Build();
 
 
