@@ -58,6 +58,6 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
 
     public string GetConnectionString(ConnectionDetails connection)
     {
-        return $"DataSource={connection.Server}AccessMode=ReadWriteCreate;";
+        return $"DataSource={connection.Server};";
     }
 }

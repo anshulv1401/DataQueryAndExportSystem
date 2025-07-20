@@ -1,6 +1,9 @@
 ﻿
+using DataQueryAndExportSystem.Databases;
+using DataQueryAndExportSystem.Services;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using static DataQueryAndExportSystem.Enums.DataServiceEnums;
 
 namespace DataQueryAndExportSystem
 {
@@ -19,8 +22,9 @@ namespace DataQueryAndExportSystem
 
             // TODO logging configuration
             builder.Services.AddSingleton(Log.Logger);
+            builder.Services.AddSingleton<IDataService, DataService>();
+            builder.Services.AddKeyedSingleton<IDatabaseAdapter, DuckDbDatabaseAdapter>(DatabaseType.DuckDb);
             var app = builder.Build();
-
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -28,11 +32,9 @@ namespace DataQueryAndExportSystem
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
