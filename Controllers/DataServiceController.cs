@@ -6,7 +6,7 @@ using static DataQueryAndExportSystem.Enums.DataServiceEnums;
 namespace DataQueryAndExportSystem.Controllers
 {
     [ApiController]
-    [Route("[controller]/v1")]
+    [Route("[controller]")]
     public class DataServiceController : ControllerBase
     {
         private readonly ILogger<DataServiceController> _logger;
@@ -18,19 +18,19 @@ namespace DataQueryAndExportSystem.Controllers
             _dataService = dataService;
         }
 
-        [HttpGet(Name = "query")]
+        [HttpGet(template:nameof(Query), Name = "Query")]
         public IList<IList<IDictionary<string, dynamic>>> Query([FromQuery] string query, [FromQuery] int pageNumber)
         {
             return _dataService.FetchData(query, pageNumber);
         }
 
-        [HttpGet(Name = "export")]
+        [HttpPost(template:nameof(Export), Name= "export")]
         public ExportStatus Export([FromQuery] string query, [FromQuery] ExportFormat exportFormat)
         {
             return _dataService.QueueExport(query, exportFormat);
         }
 
-        [HttpGet(Name = "export")]
+        [HttpGet(template: nameof(Export), Name = "export-status")]
         public ExportStatus Export([FromRoute] string jobId)
         {
             return _dataService.GetExportStatus(jobId);
