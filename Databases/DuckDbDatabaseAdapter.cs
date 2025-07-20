@@ -11,7 +11,7 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
 {
     public DatabaseType DatabaseType { get { return DatabaseType.DuckDb; } }
 
-    public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(ConnectionDetails connectionDetails, string queryString, int? limit = null)
+    public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(ConnectionDetails connectionDetails, string query, int? limit = null)
     {
         await using var connection = new DuckDBConnection(GetConnectionString(connectionDetails));
         try
@@ -21,12 +21,12 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
             logger.LogInformation("Connection Opened");
 
             using var command = connection.CreateCommand();
-            command.CommandText = queryString;
+            command.CommandText = query;
 
             IList<IList<KeyValuePair<string, dynamic?>>> results = [];
 
             using var reader = await command.ExecuteReaderAsync();
-            logger.LogInformation("Executing query {@query}", queryString);
+            logger.LogInformation("Executing query {@query}", query);
             while (await reader.ReadAsync())
             {
                 var row = new List<KeyValuePair<string, dynamic?>>();

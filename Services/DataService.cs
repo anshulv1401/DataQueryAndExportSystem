@@ -7,29 +7,23 @@ namespace DataQueryAndExportSystem.Services
 {
     public class DataService : IDataService
     {
-        private readonly IDatabaseAdapter _database;
-        public DataService([FromKeyedServices(DatabaseType.DuckDb)] IDatabaseAdapter database)
+        private readonly DatabaseService _databaseService;
+        public DataService(DatabaseService databaseService)
         {
-            _database = database;
+            _databaseService = databaseService;
         }
 
-        public ExportStatus QueueExport(string query, DataServiceEnums.ExportFormat format)
+        public async Task<ExportStatus> QueueExport(string query, DataServiceEnums.ExportFormat format)
         {
             throw new NotImplementedException();
         }
 
-        public IList<IList<KeyValuePair<string, dynamic?>>> FetchData(string query, int pageNumber)
+        public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(string query, int numberOfPages)
         {
-            var connectionDetails = new ConnectionDetails
-            {
-                Server = "sales.duckdb",
-                Database = ""
-            };
-
-            return _database.FetchData(connectionDetails, query, pageNumber * 100).GetAwaiter().GetResult();
+            return await _databaseService.FetchData(query, numberOfPages);
         }
 
-        public ExportStatus GetExportStatus(string jobId)
+        public async Task<ExportStatus> GetExportStatus(string jobId)
         {
             throw new NotImplementedException();
         }

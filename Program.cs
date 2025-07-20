@@ -22,6 +22,7 @@ namespace DataQueryAndExportSystem
 
             // TODO logging configuration
             builder.Services.AddSingleton(Log.Logger);
+            builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddKeyedSingleton<IDatabaseAdapter, DuckDbDatabaseAdapter>(DatabaseType.DuckDb);
             var app = builder.Build();
