@@ -10,7 +10,7 @@ namespace DataQueryAndExportSystem.Services
             throw new NotImplementedException();
         }
 
-        public IList<IList<IDictionary<string, dynamic>>> FetchData(string query, int pageNumber)
+        public IList<IList<KeyValuePair<string, dynamic?>>> FetchData(string query, int pageNumber)
         {
             throw new NotImplementedException();
         }

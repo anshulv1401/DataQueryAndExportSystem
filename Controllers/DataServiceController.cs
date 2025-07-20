@@ -19,7 +19,7 @@ namespace DataQueryAndExportSystem.Controllers
         }
 
         [HttpGet(template:nameof(Query), Name = "Query")]
-        public IList<IList<IDictionary<string, dynamic>>> Query([FromQuery] string query, [FromQuery] int pageNumber)
+        public IList<IList<KeyValuePair<string, dynamic?>>> Query([FromQuery] string query, [FromQuery] int pageNumber)
         {
             return _dataService.FetchData(query, pageNumber);
         }

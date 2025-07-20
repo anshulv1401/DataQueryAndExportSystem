@@ -5,7 +5,7 @@ namespace DataQueryAndExportSystem.Services
 {
     public interface IDataService
     {
-        IList<IList<IDictionary<string, dynamic>>> FetchData(string query, int pageNumber);
+        IList<IList<KeyValuePair<string, dynamic?>>> FetchData(string query, int pageNumber);
         ExportStatus QueueExport(string query, ExportFormat format);
         ExportStatus GetExportStatus(string jobId);
     }

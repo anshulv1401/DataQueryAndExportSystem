@@ -1,5 +1,6 @@
 ﻿using DataQueryAndExportSystem.Models;
 using DuckDB.NET.Data;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using static DataQueryAndExportSystem.Enums.DataServiceEnums;
@@ -10,7 +11,7 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
 {
     public DatabaseType DatabaseType { get { return DatabaseType.DuckDb; } }
 
-    public async Task<List<List<KeyValuePair<string, dynamic?>>>> FetchData(ConnectionDetails connectionDetails, string queryString, int? limit = null)
+    public async Task<IList<IList<KeyValuePair<string, dynamic?>>>> FetchData(ConnectionDetails connectionDetails, string queryString, int? limit = null)
     {
         await using var connection = new DuckDBConnection(GetConnectionString(connectionDetails));
         try
@@ -22,8 +23,7 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
             using var command = connection.CreateCommand();
             command.CommandText = queryString;
 
-            var results = new List<List<KeyValuePair<string, dynamic?>>>();
-            var dataTypes = new List<KeyValuePair<string, string>>();
+            IList<IList<KeyValuePair<string, dynamic?>>> results = [];
 
             using var reader = await command.ExecuteReaderAsync();
             logger.LogInformation("Executing query {@query}", queryString);
@@ -39,8 +39,7 @@ public class DuckDbDatabaseAdapter(ILogger<DuckDbDatabaseAdapter> logger) : IDat
                 if (limit.HasValue && limit-- <= 0)
                     break;
             }
-
-            return (results);
+            return results;
         }
         catch (Exception ex)
         {
