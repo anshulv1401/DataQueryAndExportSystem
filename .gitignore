@@ -135,3 +135,4 @@ wwwroot/node_modules/
 ########################################################
 #  Add any project‑specific ignores below this line
 ########################################################
+/sales_records.duckdb
