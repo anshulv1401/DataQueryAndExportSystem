@@ -1,7 +1,8 @@
 ﻿using DataQueryAndExportSystem.Databases;
-using DataQueryAndExportSystem.Enums;
 using DataQueryAndExportSystem.Models;
 using DataQueryAndExportSystem.Services.ExportServices;
+using Hangfire;
+using Hangfire.Server;
 using static DataQueryAndExportSystem.Enums.DataServiceEnums;
 
 namespace DataQueryAndExportSystem.Services
@@ -11,7 +12,7 @@ namespace DataQueryAndExportSystem.Services
         private readonly DatabaseHelper _databaseHelper;
         private readonly ExportHelper _exportHelper;
         private readonly ILogger<DataService> _logger;
-        public DataService(ILogger<DataService> logger, DatabaseHelper databaseHelper, 
+        public DataService(ILogger<DataService> logger, DatabaseHelper databaseHelper,
             ExportHelper exportHelper)
         {
             _databaseHelper = databaseHelper;
@@ -22,12 +23,13 @@ namespace DataQueryAndExportSystem.Services
 
         public async Task<ExportStatus> QueueExport(ExportFormat format, string query)
         {
-            await _exportHelper.ExportData(format, query);
+            var exportJobId = Guid.NewGuid().ToString();
+            BackgroundJob.Enqueue(() => QueueExportDataJob(format, query, exportJobId, null));
 
             return new ExportStatus
             {
                 Status = JobStatus.Queued,
-                JobId = Guid.NewGuid().ToString()
+                JobId = exportJobId
             };
         }
 
@@ -39,6 +41,11 @@ namespace DataQueryAndExportSystem.Services
         public async Task<ExportStatus> GetExportStatus(string jobId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task QueueExportDataJob(ExportFormat format, string query, string ExportJobId, PerformContext backgroundJobContext = null)
+        {
+            await _exportHelper.ExportData(format, query);
         }
     }
 }

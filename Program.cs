@@ -3,6 +3,8 @@ using DataQueryAndExportSystem.Databases;
 using DataQueryAndExportSystem.Models;
 using DataQueryAndExportSystem.Services;
 using DataQueryAndExportSystem.Services.ExportServices;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using static DataQueryAndExportSystem.Enums.DataServiceEnums;
@@ -28,7 +30,14 @@ namespace DataQueryAndExportSystem
 
             // TODO logging configuration
             builder.Services.AddSingleton(Log.Logger);
-            
+
+            builder.Services.AddHangfire(c => c.UseMemoryStorage(new MemoryStorageOptions
+            {
+                JobExpirationCheckInterval = TimeSpan.FromHours(24),
+                FetchNextJobTimeout = TimeSpan.FromHours(24)
+            }));
+            builder.Services.AddHangfireServer();
+
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddKeyedSingleton<IDatabaseAdapter, DuckDbDatabaseAdapter>(DatabaseType.DuckDb);
             builder.Services.AddSingleton<DatabaseHelper>();
