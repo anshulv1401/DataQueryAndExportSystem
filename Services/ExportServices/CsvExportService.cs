@@ -1,9 +1,6 @@
 ﻿using DataQueryAndExportSystem.Databases;
 using DataQueryAndExportSystem.Models;
 using GemBox.Spreadsheet;
-using System.Text;
-using static DataQueryAndExportSystem.Enums.DataServiceEnums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DataQueryAndExportSystem.Services.ExportServices
 {
@@ -22,7 +19,9 @@ namespace DataQueryAndExportSystem.Services.ExportServices
         public async Task<List<ExportFileInfo>> Export(string query)
         {
             List<ExportFileInfo> files = [];
-            var fileName = $"export_{DateTime.UtcNow:yyyyMMdd_HHmmss}";
+            string isoTimestamp = DateTime.UtcNow.ToString("o");  // e.g., 2025-07-27T06:00:00.0000000Z
+
+            var fileName = $"export_{DateTime.UtcNow:yyyyMMdd_HHmmssfff}";
             var data = await _databaseService.FetchData(query);
 
             if (data != null && data.Count > 0)

@@ -7,6 +7,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Text.Json.Serialization;
 using static DataQueryAndExportSystem.Enums.DataServiceEnums;
 
 namespace DataQueryAndExportSystem
@@ -17,11 +18,15 @@ namespace DataQueryAndExportSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.UseInlineDefinitionsForEnums();
             });
 
             builder.Configuration.AddEnvironmentVariables();
@@ -36,7 +41,16 @@ namespace DataQueryAndExportSystem
                 JobExpirationCheckInterval = TimeSpan.FromHours(24),
                 FetchNextJobTimeout = TimeSpan.FromHours(24)
             }));
-            builder.Services.AddHangfireServer();
+            builder.Services.AddHangfireServer(o =>
+            {
+                o.WorkerCount = 3;
+            });
+
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
+            {
+                Attempts = 1,
+                OnAttemptsExceeded = AttemptsExceededAction.Fail
+            });
 
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddKeyedSingleton<IDatabaseAdapter, DuckDbDatabaseAdapter>(DatabaseType.DuckDb);
@@ -63,6 +77,8 @@ namespace DataQueryAndExportSystem
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseHangfireDashboard("/hangfire");
 
             app.Run();
         }
